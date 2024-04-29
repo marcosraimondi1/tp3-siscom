@@ -41,11 +41,16 @@ Entre sus ventajas:
 
 ### 2. Linker
 
-- **¿Que es un linker? ¿que hace?**
-- **¿Que es la dirección que aparece en el script del linker?¿Porqué es necesaria?**
+- **¿Qué es un linker? ¿Qué hace?**
+  
+Linker es una herramienta de software utilizada en el proceso de compilación de programas. Su función principal consiste en vincular o enlazar varios archivos objetos generados por el compilador en un único archivo ejecutable o en una biblioteca compartida. Esta tarea implica combinar los archivos y resolver las referencias cruzadas entre ellos, garantizando la correcta conexión entre las definiciones de funciones y variables utilizadas en diferentes partes del programa. 
+
+![Linker](https://github.com/AndyTaborda/tp3-siscom/blob/main/linker.png)
+  
+- **¿Qué es la dirección que aparece en el script del linker?¿Porqué es necesaria?**
 - **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
 - **Grabar la imagen en un pendrive y probarla en una pc y subir una foto**
-- **¿Para que se utiliza la opción --oformat binary en el linker?**
+- **¿Para qué se utiliza la opción --oformat binary en el linker?**
 
 
 ### 3. Modo Protegido
