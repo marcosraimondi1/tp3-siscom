@@ -110,11 +110,28 @@ Resultado:
 
 - **¿Para qué se utiliza la opción --oformat binary en el linker?**
 
+La opción --oformat binary en el linker (ld) se utiliza para especificar el formato del archivo de salida. El linker genera un archivo binario sin ningún formato específico de objeto ejecutable. Esto significa que el archivo resultante contendrá simplemente los datos y código que se han enlazado, sin ningún encabezado ni información adicional específica del formato del archivo ejecutable.
 
 ### 3. Modo Protegido
 
 - **Crear un código assembler que pueda pasar a modo protegido (sin macros).**
+
+Se utiliza como base el codigo de ensablador [ejemplo impresion](https://github.com/cirosantilli/x86-bare-metal-examples/blob/master/common.h#L135) de la macro PROTECTED_MODE. Se consideran los siguientes pasos para entrar en modo protegido:
+1. Deshabilitar interrupciones
+2. Cargar la GDT
+3. Fijar el bit más bajo del CR0 en 1
+4. Saltar a la sección de código de 32 bits
+5. Configurar el resto de los segmentos
+
+
 - **¿Cómo sería un programa que tenga dos descriptores de memoria diferentes, uno para cada segmento (código y datos) en espacios de memoria diferenciados?**
+
+....
+
 - **Cambiar los bits de acceso del segmento de datos para que sea de solo lectura,  intentar escribir, ¿Que sucede? ¿Que debería suceder a continuación? (revisar el teórico) Verificarlo con gdb.**
+
+....
+
 - **En modo protegido, ¿Con qué valor se cargan los registros de segmento ? ¿Porque?**
 
+....
