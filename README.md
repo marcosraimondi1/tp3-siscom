@@ -48,8 +48,66 @@ Linker es una herramienta de software utilizada en el proceso de compilación de
 ![Linker](https://github.com/AndyTaborda/tp3-siscom/blob/main/linker.png)
   
 - **¿Qué es la dirección que aparece en el script del linker?¿Porqué es necesaria?**
+
+La dirección que aparece en el script del linker es **0x7c00**. Esta dirección es importante porque indica al linker dónde debe cargar el código en la imagen de disco generada. En este caso, 0x7c00 es la dirección a la que el BIOS carga el sector de arranque al iniciar el sistema desde un disco.
+
+Es necesaria porque el sector de arranque (512 bytes) tiene una ubicación específica en la imagen del disco y debe ser cargado en memoria en una dirección conocida para que el BIOS pueda transferir el control al código de arranque correctamente. Si no especificamos esta dirección, el código puede no ejecutarse correctamente o el sistema podría no arrancar en absoluto.
+
 - **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
+
 - **Grabar la imagen en un pendrive y probarla en una pc y subir una foto**
+
+Para crear la imagen se utiliza los siguientes codigos, instrucciones y comandos:
+
+main.S:
+```asm
+.code16
+    mov $msg, %si
+    mov $0x0e, %ah
+loop:
+    lodsb
+    or %al, %al
+    jz halt
+    int $0x10
+    jmp loop
+halt:
+    hlt
+msg:
+    .asciz "hello world"
+```
+
+link.ld:
+```
+SECTIONS
+{
+    /* The BIOS loads the code from the disk to this location.
+     * We must tell that to the linker so that it can properly
+     * calculate the addresses of symbols we might jump to.
+     */
+    . = 0x7c00;
+    .text :
+    {
+        __start = .;
+        *(.text)
+        /* Place the magic boot bytes at the end of the first 512 sector. */
+        . = 0x1FE;
+        SHORT(0xAA55)
+    }
+}
+```
+
+Para crear la imagen y probarla en qemu:
+```sh
+as -g -o main.o main.S
+ld --oformat binary -o main.img -T link.ld main.o
+qemu-system-x86_64 -hda main.img
+```
+
+Resultado:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/f8fa7282-1792-49b3-a8cf-629ca975dbd1)
+
+
 - **¿Para qué se utiliza la opción --oformat binary en el linker?**
 
 
