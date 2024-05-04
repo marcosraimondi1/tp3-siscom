@@ -93,7 +93,6 @@ protected_mode:
     /* se inicializa la pila en 0x7000 */
     mov $0X7000, %ebp /* ebp = 0x7000 */
     mov %ebp, %esp    /* esp = ebp */
-    call vga_print_string
 
     /* verificamos que estemos en modo protegido */
     mov %cr0, %eax          /* eax = cr0 */
