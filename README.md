@@ -134,4 +134,18 @@ Se utiliza como base el codigo de ensablador [ejemplo impresion](https://github.
 
 - **En modo protegido, ¿Con qué valor se cargan los registros de segmento ? ¿Porque?**
 
-....
+En modo protegido, los registros de segmento (CS, DS, ES, FS, GS, SS) deben cargarse con selectores de segmento válidos. Cada selector de segmento apunta a una entrada en la tabla de descriptores de segmento global (GDT). Esta tabla contiene descripciones de segmentos que especifican la base, el límite y los atributos de los segmentos de memoria.
+
+La razón para cargar los registros de segmento con selectores válidos es garantizar que el procesador pueda acceder a la memoria de manera adecuada, aplicando los permisos y atributos especificados en las entradas de la GDT. Esto es fundamental para mantener la protección y seguridad del sistema, así como para garantizar un acceso eficiente a la memoria.
+
+En codigo assembler:
+```asm
+/* Those movs are mandatory because they update the descriptor cache */
+/* se cargan los registros de segmento con el selector de segmento correspondiente */
+    mov $DATA_SEG, %ax
+    mov %ax, %ds
+    mov %ax, %es
+    mov %ax, %fs
+    mov %ax, %gs
+    mov %ax, %ss
+```
