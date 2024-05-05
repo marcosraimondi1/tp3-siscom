@@ -5,7 +5,7 @@
 ### 1. UEFI y coreboot
 
 - **¿Qué es UEFI? ¿como puedo usarlo? Mencionar además una función a la que podría llamar usando esa dinámica.**
-  
+
 La Unified Extensible Firmware Interface (UEFI, interfaz unificada de firmware extensible) es una especificación que define una interfaz entre el sistema operativo y el firmware. UEFI reemplaza la antigua interfaz del Sistema Básico de Entrada y Salida (BIOS) estándar. Es compatible con sistemas que solo soportan BIOS, soporta tabla de particiones GUID (GPT) y es independiente de la arquitectura y controladores de la CPU. Presenta una interfaz de usuario amigable. 
 
 Para usar UEFI, se mecesota una placa base compatible con UEFI y un sistema operativo compatible con UEFI instalado en la computadora. La mayoría de las distribuciones de Linux y versiones recientes de Windows son compatibles con UEFI. 
@@ -47,7 +47,7 @@ Linker es una herramienta de software utilizada en el proceso de compilación de
 
 ![Linker](https://github.com/AndyTaborda/tp3-siscom/blob/main/linker.png)
   
-- **¿Qué es la dirección que aparece en el script del linker?¿Porqué es necesaria?**
+- **¿Qué es la dirección que aparece en el script del linker? ¿Porqué es necesaria?**
 
 La dirección que aparece en el script del linker es **0x7c00**. Esta dirección es importante porque indica al linker dónde debe cargar el código en la imagen de disco generada. En este caso, 0x7c00 es la dirección a la que el BIOS carga el sector de arranque al iniciar el sistema desde un disco.
 
@@ -56,6 +56,8 @@ Es necesaria porque el sector de arranque (512 bytes) tiene una ubicación espec
 - **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
 
 - **Grabar la imagen en un pendrive y probarla en una pc y subir una foto**
+
+(No logramos hacer que la pc arranque desde el USB, se muestran resultados del emulador qemu)
 
 Para crear la imagen se utiliza los siguientes codigos, instrucciones y comandos:
 
@@ -123,6 +125,10 @@ Se utiliza como base el codigo de ensablador [ejemplo impresion](https://github.
 4. Saltar a la sección de código de 32 bits
 5. Configurar el resto de los segmentos
 
+Utilizando el codigo de [protected_mode.S](./protected_mode.S) y siguiendo los mismo pasos para crear la imagen y correrla en qemu se obtiene el resultado:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/db2319d7-c7ec-4e73-b0fe-a087d672205a)
+
 
 - **¿Cómo sería un programa que tenga dos descriptores de memoria diferentes, uno para cada segmento (código y datos) en espacios de memoria diferenciados?**
 
@@ -130,7 +136,40 @@ Se utiliza como base el codigo de ensablador [ejemplo impresion](https://github.
 
 - **Cambiar los bits de acceso del segmento de datos para que sea de solo lectura,  intentar escribir, ¿Que sucede? ¿Que debería suceder a continuación? (revisar el teórico) Verificarlo con gdb.**
 
-....
+Se cambio mediante el bit de Escribible (W) los permisos de acceso al segmentos de data. En este caso definimos que el segmento de darta pasa a ser solo de lectura:
+```sh
+gdt_data:
+    .word 0xfff         /* limit 15-0 */
+    .word 0x0           /* base  15-0 */
+    .byte 0x0           /* base  23-16 */
+   /* .byte 0b10010010    /* (b0)A=0, W=1, ED=0, E=0, S=1, DPL=00, (b7)P=1 */
+    .byte 0b10010000    /* (b0)A=0, W=0 (Read Only), ED=0, E=0, S=1, DPL=00, (b7)P=1 */
+    .byte 0b11001111    /* (b0-b3)limit=0xff, AVL=0, 0=0, D/B=1, G=1 */
+    .byte 0x0           /* base  31-24 (bits 24-31) */
+```
+
+Si observamos y comparamos la ejecución antes y después de que se cambian los permisos de acceso se veria asi:
+
+<div style="display: flex; flex-direction: row;">
+  <p>W=1        |       W=0</p>
+  <img src="https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/52acd543-5bb7-4ad5-b45f-f364fce5c31a"
+    width=200
+    height=400
+    />
+  <img src="https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/dfa52580-a102-49e6-9073-d3669dd39c67"
+    width=200
+    height=400
+    />
+</div>
+
+Observamos un cambio al ejecutar la instrucción 0x7c43 ya que la ejecución del programa toma otro curso: 
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3891028d-50ef-465e-bce6-88cc6028fdbd)
+
+La instrucción 0x7c45 debe ser la siguiente instrucción a ser apuntada por el eip, pero por temas de acceso el eip salta a la siguiente sección a traves de una excepcion del sistema que evita el acceso de escritura al querer realizar una operacion del tipo mov:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/cb7a3546-0c29-4573-bff3-80df8e10ec7d)
+
 
 - **En modo protegido, ¿Con qué valor se cargan los registros de segmento ? ¿Porque?**
 
