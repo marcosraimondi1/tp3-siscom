@@ -67,6 +67,18 @@ Salida de hd:
 
 ![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/11426e6a-3cba-44ac-b328-669d9129d7b8)
 
+En este caso, el mensaje de “hello world” se encuentra en los bytes 65 6c 6c 6f 20 77 6f 72     6c 64 00 66 2e 0f 1f 84.
+
+La primera línea de bytes corresponde  a las instrucciones ejecutadas en x86 assembly
+be 0f 7c: el valor de 0x7c0f se mueve al registro SI.
+b4 0e:  el valor de 0x0e se mueve  al registro AH.
+ac: Lodsb carga el byte apuntado por SI en AL y aumenta SI.
+08 c0: verifica si AL es 0.
+74 04: si AL = 0, salta a halt.
+cd 10:  Int 0x10, imprime el valor de AL en pantalla.
+eb f7: salta a loop.
+
+
 - **Depuración de ejecutables con llamadas a BIOS**
 
 Al iniciar la depuración se debe utilizar el programa qemu para lanzar la imagen con unas flags las cuales permiten su debugeo desde el gdb. El comando para la compilación es el siguiente: 
