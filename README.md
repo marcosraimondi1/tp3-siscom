@@ -164,7 +164,7 @@ Utilizando el codigo de [protected_mode.S](./protected_mode.S) y siguiendo los m
 
 - **¿Cómo sería un programa que tenga dos descriptores de memoria diferentes, uno para cada segmento (código y datos) en espacios de memoria diferenciados?**
 
-....
+Para crear un programa con dos descriptores de memoria diferentes (uno para código y otro para datos), se debn utilizar los registros de segmento adecuados (DS y CS) para apuntar a los segmentos correspondientes en la memoria. Esto asegurará que el procesador pueda acceder a las instrucciones y datos de forma correcta.
 
 - **Cambiar los bits de acceso del segmento de datos para que sea de solo lectura,  intentar escribir, ¿Que sucede? ¿Que debería suceder a continuación? (revisar el teórico) Verificarlo con gdb.**
 
