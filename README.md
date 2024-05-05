@@ -53,52 +53,6 @@ La dirección que aparece en el script del linker es **0x7c00**. Esta dirección
 
 Es necesaria porque el sector de arranque (512 bytes) tiene una ubicación específica en la imagen del disco y debe ser cargado en memoria en una dirección conocida para que el BIOS pueda transferir el control al código de arranque correctamente. Si no especificamos esta dirección, el código puede no ejecutarse correctamente o el sistema podría no arrancar en absoluto.
 
-- **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
-
-El comando objdump -S main.o se utiliza principalmente para analizar y depurar archivos objetos. Proporciona un desmontaje del código objeto, mostrando el ensamblador y el código fuente original si está disponible. Esto es útil para analizar el código de un programa, inspeccionar el ensamblado generado por el compilador, depurar problemas de código y comprender el flujo de ejecución.
-
-Salida de objdump:
-
-![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3ce9fb84-e688-4e74-b70a-1f06435ee101)
-
-Por su parte, hd main.img se utiliza para mostrar el contenido binario de un archivo. "hd", que refiere a hex dump, muestra el archivo en formato hexadecimal permitiendo examinar el contenido byte por byte. Es comúnmente utilizado para inspeccionar archivos binarios, como imágenes de disco o archivos ejecutables. Es útil para verificar la integridad del archivo, buscar patrones específicos dentro del contenido binario y comprender su estructura interna.
-
-Salida de hd:
-
-![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/11426e6a-3cba-44ac-b328-669d9129d7b8)
-
-En este caso, el mensaje de “hello world” se encuentra en los bytes 65 6c 6c 6f 20 77 6f 72     6c 64 00 66 2e 0f 1f 84.
-
-La primera línea de bytes corresponde  a las instrucciones ejecutadas en x86 assembly
-be 0f 7c: el valor de 0x7c0f se mueve al registro SI.
-b4 0e:  el valor de 0x0e se mueve  al registro AH.
-ac: Lodsb carga el byte apuntado por SI en AL y aumenta SI.
-08 c0: verifica si AL es 0.
-74 04: si AL = 0, salta a halt.
-cd 10:  Int 0x10, imprime el valor de AL en pantalla.
-eb f7: salta a loop.
-
-
-- **Depuración de ejecutables con llamadas a BIOS**
-
-Al iniciar la depuración se debe utilizar el programa qemu para lanzar la imagen con unas flags las cuales permiten su debugeo desde el gdb. El comando para la compilación es el siguiente: 
-
-```sh
-qemu-system-x86_64  -fda main.img -boot a -s -S -monitor stdio
-```
-
-Luego se debe abrir desde otra terminal el gdb y utilizar el comando “target remote localhost:1234” para poder debugear desde la terminal con gdb el programa en asm:
-
-![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3895d160-c895-4e82-971b-0dd7018785d6)
-
-Una vez adentro se colocan 2 breakpoints (en 0x7c00 y en 0x7c0c):
-
-![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/718ecfc6-60a6-4152-87c6-7fbd9450dbfb)
-
-Con estos breakpoints colocados estratégicamente logramos ir mediante la instrucción “continue” en gdb ir avanzando e ir viendo la impresión de a una letra por vez en la consola de qemu.
-
-![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/9d91b334-f35a-4789-ab9f-21ba3b86f353)
-
 - **Grabar la imagen en un pendrive y probarla en una pc y subir una foto**
 
 (No logramos hacer que la pc arranque desde el USB, se muestran resultados del emulador qemu)
@@ -152,6 +106,52 @@ qemu-system-x86_64 -hda main.img
 Resultado:
 
 ![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/f8fa7282-1792-49b3-a8cf-629ca975dbd1)
+
+- **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
+
+El comando objdump -S main.o se utiliza principalmente para analizar y depurar archivos objetos. Proporciona un desmontaje del código objeto, mostrando el ensamblador y el código fuente original si está disponible. Esto es útil para analizar el código de un programa, inspeccionar el ensamblado generado por el compilador, depurar problemas de código y comprender el flujo de ejecución.
+
+Salida de objdump:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3ce9fb84-e688-4e74-b70a-1f06435ee101)
+
+Por su parte, hd main.img se utiliza para mostrar el contenido binario de un archivo. "hd", que refiere a hex dump, muestra el archivo en formato hexadecimal permitiendo examinar el contenido byte por byte. Es comúnmente utilizado para inspeccionar archivos binarios, como imágenes de disco o archivos ejecutables. Es útil para verificar la integridad del archivo, buscar patrones específicos dentro del contenido binario y comprender su estructura interna.
+
+Salida de hd:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/11426e6a-3cba-44ac-b328-669d9129d7b8)
+
+En este caso, el mensaje de “hello world” se encuentra en los bytes 65 6c 6c 6f 20 77 6f 72     6c 64 00 66 2e 0f 1f 84.
+
+La primera línea de bytes corresponde  a las instrucciones ejecutadas en x86 assembly
+be 0f 7c: el valor de 0x7c0f se mueve al registro SI.
+b4 0e:  el valor de 0x0e se mueve  al registro AH.
+ac: Lodsb carga el byte apuntado por SI en AL y aumenta SI.
+08 c0: verifica si AL es 0.
+74 04: si AL = 0, salta a halt.
+cd 10:  Int 0x10, imprime el valor de AL en pantalla.
+eb f7: salta a loop.
+
+
+- **Depuración de ejecutables con llamadas a BIOS**
+
+Al iniciar la depuración se debe utilizar el programa qemu para lanzar la imagen con unas flags las cuales permiten su debugeo desde el gdb. El comando para la compilación es el siguiente: 
+
+```sh
+qemu-system-x86_64  -fda main.img -boot a -s -S -monitor stdio
+```
+
+Luego se debe abrir desde otra terminal el gdb y utilizar el comando “target remote localhost:1234” para poder debugear desde la terminal con gdb el programa en asm:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3895d160-c895-4e82-971b-0dd7018785d6)
+
+Una vez adentro se colocan 2 breakpoints (en 0x7c00 y en 0x7c0c):
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/718ecfc6-60a6-4152-87c6-7fbd9450dbfb)
+
+Con estos breakpoints colocados estratégicamente logramos ir mediante la instrucción “continue” en gdb ir avanzando e ir viendo la impresión de a una letra por vez en la consola de qemu.
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/9d91b334-f35a-4789-ab9f-21ba3b86f353)
 
 
 - **¿Para qué se utiliza la opción --oformat binary en el linker?**
