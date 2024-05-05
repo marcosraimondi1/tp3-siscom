@@ -55,6 +55,34 @@ Es necesaria porque el sector de arranque (512 bytes) tiene una ubicación espec
 
 - **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
 
+Salida de objdump:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3ce9fb84-e688-4e74-b70a-1f06435ee101)
+
+Salida de hd:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/11426e6a-3cba-44ac-b328-669d9129d7b8)
+
+- **Depuración de ejecutables con llamadas a BIOS**
+
+Al iniciar la depuración se debe utilizar el programa qemu para lanzar la imagen con unas flags las cuales permiten su debugeo desde el gdb. El comando para la compilación es el siguiente: 
+
+```sh
+qemu-system-x86_64  -fda main.img -boot a -s -S -monitor stdio
+```
+
+Luego se debe abrir desde otra terminal el gdb y utilizar el comando “target remote localhost:1234” para poder debugear desde la terminal con gdb el programa en asm:
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3895d160-c895-4e82-971b-0dd7018785d6)
+
+Una vez adentro se colocan 2 breakpoints (en 0x7c00 y en 0x7c0c):
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/718ecfc6-60a6-4152-87c6-7fbd9450dbfb)
+
+Con estos breakpoints colocados estratégicamente logramos ir mediante la instrucción “continue” en gdb ir avanzando e ir viendo la impresión de a una letra por vez en la consola de qemu.
+
+![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/9d91b334-f35a-4789-ab9f-21ba3b86f353)
+
 - **Grabar la imagen en un pendrive y probarla en una pc y subir una foto**
 
 (No logramos hacer que la pc arranque desde el USB, se muestran resultados del emulador qemu)
