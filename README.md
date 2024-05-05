@@ -55,9 +55,13 @@ Es necesaria porque el sector de arranque (512 bytes) tiene una ubicación espec
 
 - **Compare la salida de objdump con hd, verifique donde fue colocado el programa dentro de la imagen.**
 
+El comando objdump -S main.o se utiliza principalmente para analizar y depurar archivos objetos. Proporciona un desmontaje del código objeto, mostrando el ensamblador y el código fuente original si está disponible. Esto es útil para analizar el código de un programa, inspeccionar el ensamblado generado por el compilador, depurar problemas de código y comprender el flujo de ejecución.
+
 Salida de objdump:
 
 ![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3ce9fb84-e688-4e74-b70a-1f06435ee101)
+
+Por su parte, hd main.img se utiliza para mostrar el contenido binario de un archivo. "hd", que refiere a hex dump, muestra el archivo en formato hexadecimal permitiendo examinar el contenido byte por byte. Es comúnmente utilizado para inspeccionar archivos binarios, como imágenes de disco o archivos ejecutables. Es útil para verificar la integridad del archivo, buscar patrones específicos dentro del contenido binario y comprender su estructura interna.
 
 Salida de hd:
 
