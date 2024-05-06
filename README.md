@@ -214,6 +214,8 @@ Observamos un cambio al ejecutar la instrucción 0x7c43 ya que la ejecución del
 
 La instrucción 0x7c45 debe ser la siguiente instrucción a ser apuntada por el eip, pero por temas de acceso el eip salta a la siguiente sección a traves de una excepcion del sistema que evita el acceso de escritura al querer realizar una operacion del tipo mov:
 
+El mecanismo de proteccion, genera una excepcion si se intenta cargar SS (registro del segmento de pila) con el valor de un selector cuyo descriptor asociado esta definido como no escribible (W=0).
+
 ![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/cb7a3546-0c29-4573-bff3-80df8e10ec7d)
 
 
