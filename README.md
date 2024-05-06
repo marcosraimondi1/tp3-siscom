@@ -8,7 +8,7 @@
 
 La Unified Extensible Firmware Interface (UEFI, interfaz unificada de firmware extensible) es una especificación que define una interfaz entre el sistema operativo y el firmware. UEFI reemplaza la antigua interfaz del Sistema Básico de Entrada y Salida (BIOS) estándar. Es compatible con sistemas que solo soportan BIOS, soporta tabla de particiones GUID (GPT) y es independiente de la arquitectura y controladores de la CPU. Presenta una interfaz de usuario amigable. 
 
-Para usar UEFI, se mecesota una placa base compatible con UEFI y un sistema operativo compatible con UEFI instalado en la computadora. La mayoría de las distribuciones de Linux y versiones recientes de Windows son compatibles con UEFI. 
+Para usar UEFI, se necesita una placa base compatible con UEFI y un sistema operativo compatible con UEFI instalado en la computadora. La mayoría de las distribuciones de Linux y versiones recientes de Windows son compatibles con UEFI. 
 
 Acceder al firmware UEFI:
 1. Inicio del sistema (boot): Al encender la computadora, presionar la tecla adecuada para acceder al menú de inicio o al menú de arranque. Esto varía según el fabricante de la placa base, pero comúnmente se usa una de las teclas como F2, F10, F12, Esc o Supr.
@@ -21,7 +21,7 @@ Acceder al firmware UEFI:
 
 - **¿Qué es Converged Security and Management Engine (CSME), the Intel Management Engine BIOS Extension (Intel MEBx)?**
 
-Converged Security and Management Engine (CSME): El Intel® CSME es un controlador de seguridad y administración basado en hardware que está aislado de la CPU (Unidad Central de Procesamiento). Entre sus principales funciones: 
+Converged Security and Management Engine (CSME): El Intel® CSME es un controlador de seguridad y administración basado en hardware que está aislado en la CPU (Unidad Central de Procesamiento). Entre sus principales funciones: 
   - Inicialización de silicio: El firmware del CSME se almacena en la memoria no volátil (NVM) como parte del firmware del sistema, que incluye la BIOS, parches de microcódigo, módulo de código de autenticación (ACM) y otros componentes.
   - Gestión: El CSME permite la administración remota y local del sistema, incluida la configuración, actualización y diagnóstico. Esto es útil para tareas como la administración de flotas de computadoras en una empresa.
   - Seguridad: El CSME proporciona funciones de seguridad críticas, como la autenticación de firmware, la protección de claves y la detección de amenazas. 
@@ -178,11 +178,11 @@ Utilizando el codigo de [protected_mode.S](./protected_mode.S) y siguiendo los m
 
 - **¿Cómo sería un programa que tenga dos descriptores de memoria diferentes, uno para cada segmento (código y datos) en espacios de memoria diferenciados?**
 
-Para crear un programa con dos descriptores de memoria diferentes (uno para código y otro para datos), se debn utilizar los registros de segmento adecuados (DS y CS) para apuntar a los segmentos correspondientes en la memoria. Esto asegurará que el procesador pueda acceder a las instrucciones y datos de forma correcta.
+Para crear un programa con dos descriptores de memoria diferentes (uno para código y otro para datos), se deben utilizar los registros de segmento adecuados (DS y CS) para apuntar a los segmentos correspondientes en la memoria. Esto asegurará que el procesador pueda acceder a las instrucciones y datos de forma correcta.
 
 - **Cambiar los bits de acceso del segmento de datos para que sea de solo lectura,  intentar escribir, ¿Que sucede? ¿Que debería suceder a continuación? (revisar el teórico) Verificarlo con gdb.**
 
-Se cambio mediante el bit de Escribible (W) los permisos de acceso al segmentos de data. En este caso definimos que el segmento de darta pasa a ser solo de lectura:
+Se cambio mediante el bit de Escribible (W) los permisos de acceso al segmentos de data. En este caso definimos que el segmento de data pasa a ser solo de lectura:
 ```sh
 gdt_data:
     .word 0xfff         /* limit 15-0 */
