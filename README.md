@@ -49,7 +49,7 @@ Linker es una herramienta de software utilizada en el proceso de compilación de
   
 - **¿Qué es la dirección que aparece en el script del linker? ¿Porqué es necesaria?**
 
-La dirección que aparece en el script del linker es **0x7c00**. Esta dirección es importante porque indica al linker dónde debe cargar el código en la imagen de disco generada. En este caso, 0x7c00 es la dirección a la que el BIOS carga el sector de arranque al iniciar el sistema desde un disco.
+La dirección que aparece en el script del linker es **0x7c00**. Esta dirección es importante porque indica al linker dónde debe cargar el código en la imagen de disco generada. En este caso, 0x7c00 es la dirección a la que el BIOS carga el sector de arranque al iniciar el sistema desde un disco. Esta direccion permite calcular correctamente las direcciones a las que se salta cuando se hacen operaciones de jump por ejemplo. 
 
 Es necesaria porque el sector de arranque (512 bytes) tiene una ubicación específica en la imagen del disco y debe ser cargado en memoria en una dirección conocida para que el BIOS pueda transferir el control al código de arranque correctamente. Si no especificamos esta dirección, el código puede no ejecutarse correctamente o el sistema podría no arrancar en absoluto.
 
@@ -115,7 +115,7 @@ Salida de objdump:
 
 ![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3ce9fb84-e688-4e74-b70a-1f06435ee101)
 
-Algo destacable con la ejecución de este comando es que la dirección de inicio del programa es 0x0 y no 0x7c00. Esto ocurre porque se está generando un archivo binario que carece de la información sobre la dirección de inicio específica en la que debe cargarse en la memoria del procesador. El formato binario generado por objcopy -o contiene simplemente una imagen de memoria de lo que debe ser cargado, a menudo con relleno, pero sin información sobre la dirección de inicio.
+Algo destacable con la ejecución de este comando es que la dirección de inicio del programa es 0x0 y no 0x7c00. Esto ocurre porque se está generando un archivo binario que carece de la información sobre la dirección de inicio específica en la que debe cargarse en la memoria del procesador. El formato binario generado por objcopy -o contiene simplemente una imagen de memoria de lo que debe ser cargado, a menudo con relleno, pero sin información sobre la dirección de inicio (la direccion de 0x7c00 sirve en el linker para calcular las direcciones de saltos pero no se agrega esa informacion en los binarios).
 
 Por su parte, hd main.img se utiliza para mostrar el contenido binario de un archivo. "hd", que refiere a hex dump, muestra el archivo en formato hexadecimal permitiendo examinar el contenido byte por byte. Es comúnmente utilizado para inspeccionar archivos binarios, como imágenes de disco o archivos ejecutables. Es útil para verificar la integridad del archivo, buscar patrones específicos dentro del contenido binario y comprender su estructura interna.
 
