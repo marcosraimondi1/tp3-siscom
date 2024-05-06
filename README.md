@@ -115,6 +115,8 @@ Salida de objdump:
 
 ![image](https://github.com/marcosraimondi1/tp3-siscom/assets/69517496/3ce9fb84-e688-4e74-b70a-1f06435ee101)
 
+Algo destacable con la ejecución de este comando es que la dirección de inicio del programa es 0x0 y no 0x7c00. Esto ocurre porque se está generando un archivo binario que carece de la información sobre la dirección de inicio específica en la que debe cargarse en la memoria del procesador. El formato binario generado por objcopy -o contiene simplemente una imagen de memoria de lo que debe ser cargado, a menudo con relleno, pero sin información sobre la dirección de inicio.
+
 Por su parte, hd main.img se utiliza para mostrar el contenido binario de un archivo. "hd", que refiere a hex dump, muestra el archivo en formato hexadecimal permitiendo examinar el contenido byte por byte. Es comúnmente utilizado para inspeccionar archivos binarios, como imágenes de disco o archivos ejecutables. Es útil para verificar la integridad del archivo, buscar patrones específicos dentro del contenido binario y comprender su estructura interna.
 
 Salida de hd:
